@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>knowrob_zethus</name>
+    <version>0.0.0</version>
+    <description>The knowrob zethus package</description>
+    <maintainer email="avyas@uni-bremen.de">Abhijit Vyas</maintainer>
+    <license>BSD</license>
+    <url type="website">http://www.knowrob.org/</url>
+    <author>openEASE</author>
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>knowrob</build_depend>
+    <build_depend>rosprolog</build_depend>
+    <exec_depend>knowrob</exec_depend>
+    <exec_depend>rosprolog</exec_depend>
+</package>

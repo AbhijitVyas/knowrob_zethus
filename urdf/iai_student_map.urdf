@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!-- created with static scene to urdf converter -->
+  <robot name="iai_student_map">
+    <link name="floor">
+    </link>
+    <link name="table1">
+        <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iai_student_robot/meshes/dae/Table1.dae" scale="1 1 1"/>
+            </geometry>
+        </visual>
+    </link>
+    <link name="box">
+        <visual>
+         <origin xyz="0 0 0.4" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.8 0.8 0.8"/>
+            </geometry>
+        </visual>
+    </link>
+    <joint name="Table1_joint" type="fixed">
+        <origin xyz="-1.8 -1.8 0" rpy="0 0 0"/>
+        <parent link="floor"/>
+        <child link="table1"/>
+    </joint>
+    <joint name="box_joint" type="fixed">
+        <origin xyz="1.5 1.5 0" rpy="0 0 0"/>
+        <parent link="floor"/>
+        <child link="box"/>
+    </joint>
+  </robot>

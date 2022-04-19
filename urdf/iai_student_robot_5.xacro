@@ -1,0 +1,222 @@
+<?xml version="1.0" ?>
+<robot name="iai_student_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+    <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+    </material>
+    <material name="green">
+        <color rgba="0.0 0.8 0.0 1.0"/>
+    </material>
+    <material name="grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+    </material>
+    <material name="orange">
+        <color rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
+    </material>
+    <material name="brown">
+        <color rgba="0.870588235294 0.811764705882 0.764705882353 1.0"/>
+    </material>
+    <material name="red">
+        <color rgba="0.80078125 0.12890625 0.1328125 1.0"/>
+    </material>
+    <material name="white">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+
+    <xacro:property name="wheel_radius" value="0.08"/>
+    <xacro:property name="pi" value="3.14"/>
+    <xacro:property name="chassis_box_height" value="0.07"/>
+    <xacro:property name="platform_cylinder_length" value="0.05"/>
+    <xacro:property name="arm_cylinder_length" value="0.18"/>
+<!--    <link name="base_link">-->
+<!--        <visual>-->
+<!--            <origin rpy="0 0 0" xyz="0 0 0"/>-->
+<!--        </visual>-->
+<!--    </link>-->
+
+    <link name="base_link">
+        <!-- chassis box -->
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 ${chassis_box_height/2 + wheel_radius/2}"/>
+            <geometry>
+                <box size="0.5 0.3 ${chassis_box_height}"/>
+            </geometry>
+            <material name="orange"/>
+        </visual>
+
+        <!-- caster front -->
+        <visual name="caster_front_visual">
+            <origin rpy=" 0 0 0" xyz="0.2 0 0.05"/>
+            <geometry>
+                <sphere radius="0.05"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="right_wheel_link">
+        <visual>
+            <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.04" radius="${wheel_radius}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <joint name="right_wheel_joint" type="continuous">
+        <origin rpy="0 0 0" xyz="-0.05 0.15 ${chassis_box_height/2 + wheel_radius/2}"/>
+        <child link="right_wheel_link"/>
+        <parent link="base_link"/>
+        <axis rpy="0 0 0" xyz="0 1 0"/>
+        <limit effort="10000" velocity="10"/>
+        <joint_properties damping="1.0" friction="1.0"/>
+    </joint>
+
+    <link name="left_wheel_link">
+        <visual>
+            <origin rpy="0 1.5707 1.5707" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.04" radius="${wheel_radius}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <joint name="left_wheel_joint" type="continuous">
+        <origin rpy="0 0 0" xyz="-0.05 -0.15 ${chassis_box_height/2 + wheel_radius/2}"/>
+        <child link="left_wheel_link"/>
+        <parent link="base_link"/>
+        <axis rpy="0 0 0" xyz="0 1 0"/>
+        <limit effort="10000" velocity="10"/>
+        <joint_properties damping="1.0" friction="1.0"/>
+    </joint>
+
+    <link name="torso_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.2" radius="0.02"/>
+            </geometry>
+            <material name="blue"/>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.1"/>
+        </visual>
+    </link>
+
+    <joint name="torso_joint" type="continuous">
+        <axis xyz="0 0 1"/>
+        <parent link="base_link"/>
+        <child link="torso_link"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 ${chassis_box_height + wheel_radius/2}"/>
+    </joint>
+
+    <link name="upper_arm_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.18" radius="0.02"/>
+            </geometry>
+            <material name="orange"/>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.09"/>
+        </visual>
+    </link>
+
+    <joint name="upper_arm_joint" type="revolute">
+        <axis xyz="1 0 0"/>
+        <parent link="torso_link"/>
+        <child link="upper_arm_link"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.2"/>
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+    </joint>
+
+<!--    <joint name="upper_arm_joint_2" type="revolute">-->
+<!--        <axis xyz="0 1 0"/>-->
+<!--        <parent link="base_link"/>-->
+<!--        <child link="upper_arm_link"/>-->
+<!--        <origin rpy="0 0 0" xyz="0.0 0.0 0.00"/>-->
+<!--        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>-->
+<!--    </joint>-->
+
+    <link name="lower_arm_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.18" radius="0.02"/>
+            </geometry>
+            <material name="red"/>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.09"/>
+        </visual>
+    </link>
+
+    <joint name="lower_arm_joint" type="revolute">
+        <axis xyz="1 1 0"/>
+        <parent link="upper_arm_link"/>
+        <child link="lower_arm_link"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.18"/>
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+    </joint>
+
+
+    <link name="gripper_base_link">
+        <visual>
+            <geometry>
+                <box size="0.025 0.025 0.075"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+    </link>
+
+    <joint name="gripper_wrist" type="continuous">
+        <axis xyz="0 0 1"/>
+        <parent link="lower_arm_link"/>
+        <child link="gripper_base_link"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.2175"/>
+    </joint>
+
+    <link name="gripper_horizontal_link">
+        <visual>
+            <geometry>
+                <box size="0.025 0.15 0.025"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+    </link>
+
+    <joint name="gripper_horizontal_joint" type="fixed">
+        <parent link="gripper_base_link"/>
+        <child link="gripper_horizontal_link"/>
+        <origin rpy="0 0 0" xyz="0.0 0.0 0.0375"/>
+    </joint>
+
+    <link name="gripper_hand_left_link">
+        <visual>
+            <geometry>
+                <box size="0.025 0.025 0.05"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+    </link>
+
+    <joint name="gripper_hand_left_joint" type="prismatic">
+        <parent link="gripper_horizontal_link"/>
+        <child link="gripper_hand_left_link"/>
+        <limit effort="1000.0" lower="-0.05" upper="0" velocity="0.5"/>
+        <axis xyz="0 -1 0"/>
+        <origin rpy="0 0 0" xyz="0.0 -0.062 0.0375"/>
+    </joint>
+
+    <link name="gripper_hand_right_link">
+        <visual>
+            <geometry>
+                <box size="0.025 0.025 0.05"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+    </link>
+
+    <joint name="gripper_hand_right_joint" type="prismatic">
+        <parent link="gripper_horizontal_link"/>
+        <child link="gripper_hand_right_link"/>
+        <limit effort="1000.0" lower="-0.05" upper="0.0" velocity="0.5"/>
+        <axis xyz="0 1 0"/>
+        <origin rpy="0 0 0" xyz="0.0 0.062 0.0375"/>
+    </joint>
+</robot>
